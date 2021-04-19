@@ -43,9 +43,11 @@ class CNNEMD:
         
         #Data
         
-        current_directory=os.getcwd()
-        data_directory=os.path.join(current_directory,r'data/data/signal/nElinks_5/ttbar_v11_eolNoise_Layer9_5Links.csv')
-        f_raw = (data_directory)
+        f_raw = '../data/signal/nElinks_5/ttbar_v11_eolNoise_Layer9_5Links.csv'
+
+        # if data not found, download from dropbox
+        if not os.path.isfile(f_raw):
+        os.system('cd ../; wget -O data.tgz https://www.dropbox.com/s/owdfdxwb9rwrgyo/data.tgz?dl=1; tar -xvzf data.tgz; rm data.tgz'))
         
         #Arranging the hexagon
         arrange443 = np.array([0,16, 32,
@@ -64,8 +66,6 @@ class CNNEMD:
                                13,29, 45,
                                14,30, 46,
                                15,31, 47])
-        
-        #Get Data. Might need to change it later
         
         calQ     = np.genfromtxt(f_raw, delimiter=',',usecols=[*range(0, 48)],skip_header=2000,max_rows=300)
         sumQ     = calQ.sum(axis=1)
