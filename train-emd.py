@@ -1,4 +1,3 @@
-
 """
 For training EMD with different hyperparameters
 @author: Rohan
@@ -8,60 +7,61 @@ import pandas as pd
 import os
 import numpy as np
 
-class TRAINEMD:
+#Data
     
-    #Data
-    
-    df=[]
-    mean_data=[]
-    std_data=[]
-    nfilt_data=[]
-    ksize_data=[]
-    neuron_data=[]
-    numlayer_data=[]
-    convlayer_data=[]
-    epoch_data=[]
-    z_score=[]
-    
-    #Initialize lists of hyperparamters
-    
-    num_filt=[32,64,128,256]
-    kernel_size=[1,3,5]
-    num_dens_neurons=[32,64,128,256]
-    num_dens_layers=[1,2]
-    num_conv_2d=[1,2,3,4]
-    num_epochs=64
-    
-    #Training loop
-    
-    for n_f in num_filt:
-        
-        for k_s in kernel_size:
-            
-            for n_d_n in num_dens_neurons:
-                
-                for n_d_l in num_dens_layers:
-                    
-                    for n_c_l in num_conv_2d:
-                        
-                        obj=Conv2D.CNNEMD(True)
-                        mean, sd = obj.ittrain(n_f,k_s, n_d_n ,n_d_l,n_c_l,num_epochs)
-                        mean_data.append(mean)
-                        std_data.append(sd)
-                        nfilt_data.append(n_f)
-                        ksize_data.append(k_s)
-                        neuron_data.append(n_d_n)
-                        numlayer_data.append(n_d_l)
-                        convlayer_data.append(n_c_l)
-                        z=abs(mean)/sd
-                        z_score.append(z)
+df=[]
+mean_data=[]
+std_data=[]
+nfilt_data=[]
+ksize_data=[]
+neuron_data=[]
+numlayer_data=[]
+convlayer_data=[]
+epoch_data=[]
+z_score=[]
 
-    for_pdata=[mean_data,std_data,nfilt_data,ksize_data,neuron_data,numlayer_data,convlayer_data,z_score]
+#List of lists of Hyperparamters
+
+hyp_list=[[128,3,256,1,4],
+          [64,5,32,1,4],
+          [32,5,128,1,3],
+          [128,5,32,1,4],
+          [128,5,256,1,2],
+          [256,1,64,2,4],
+          [32,5,256,1,3],
+          [128,3,64,1,4],
+          [128,5,32,1,3],
+          [128,5,64,1,3],
+         ]
+
+it=1
+
+for hyp in hyp_list:
+    num_filt=hyp[0]
+    kernel_size=hyp[1]
+    num_dens_neurons=hyp[2]
+    num_dens_layers=hyp[3]
+    num_conv_2d=hyp[4]
+    num_epochs=29
     
-    current_directory=os.getcwd()
-    data_directory=os.path.join(current_directory,r'EMD_data.xlsx')
+    for i in [0,1,2]:
+        num_epochs=num_epochs+1
+        obj=Conv2D.CNNEMD(True)
+        mean, sd = obj.ittrain(num_filt,kernel_size, num_dens_neurons, num_dens_layers, num_conv_2d,num_epochs)
+        mean_data.append(mean)
+        std_data.append(sd)
+        nfilt_data.append(num_filt)
+        ksize_data.append(kernel_size)
+        neuron_data.append(num_dens_neurons)
+        numlayer_data.append(num_dens_layers)
+        convlayer_data.append(num_conv_2d)
+        z=abs(mean)/sd
+        z_score.append(z)
+        
+for_pdata=[mean_data,std_data,nfilt_data,ksize_data,neuron_data,numlayer_data,convlayer_data,z_score]
     
-    df=pd.DataFrame(for_pdata)
-    df.to_excel(data_directory)
+current_directory=os.getcwd()
+data_directory=os.path.join(current_directory,r'FG.xlsx')
     
-    
+df=pd.DataFrame(for_pdata)
+df.to_excel(data_directory)
