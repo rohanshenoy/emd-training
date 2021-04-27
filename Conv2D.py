@@ -29,7 +29,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 class CNNEMD:
     
-    use443=False
+    use443=True
     X1_train=[]
     X2_train=[]
     
@@ -107,8 +107,6 @@ class CNNEMD:
         print(X2_val.shape)
         print(y_val.shape)
 
-        """        
-    
         #Plotting the HGCal Data
     
         i = 10
@@ -124,8 +122,6 @@ class CNNEMD:
         fig.suptitle('EMD = %.3f, occ = (%s, %s), sumQ = (%s, %s)'%(emd(calQ[i],calQ[j]),occ[i],occ[j], sumQ[i], sumQ[j]))
         plt.savefig(current_directory+"\-EMD21.png")
         plt.close()
-        
-        """
         
         #Building CNN
         
@@ -192,7 +188,6 @@ class CNNEMD:
                             validation_data=((X1_val, X2_val), y_val),
                             epochs=num_epochs, verbose=1, batch_size=32, callbacks=callbacks)
         
-        """
         #Making directory for graphs
         
         current_directory=os.getcwd()
@@ -249,8 +244,6 @@ class CNNEMD:
         ax.set_ylabel('Pred. EMD [GeV]')
         fig=plt.savefig(img_directory+"\-"+str(num_filt)+str(kernel_size)+str(num_dens_neurons)+str(num_dens_layers)+str(num_conv_2d)+str(num_epochs)+"Graphic.png")
         plt.close()
-        
-        """
         
         return(np.mean(rel_diff),np.std(rel_diff))
     
