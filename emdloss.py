@@ -22,6 +22,7 @@ import tensorflow as tf
 from tensorflow.keras import backend as K
 
 emd_model = tf.keras.models.load_model("emd_model_best.h5")
+emd_model.trainable = False
 
 remap_8x8 = [4, 12, 20, 28,  5, 13, 21, 29,  6, 14, 22, 30,  7, 15, 23, 31, 
              24, 25, 26, 27, 16, 17, 18, 19,  8,  9, 10, 11,  0,  1,  2,  3, 
